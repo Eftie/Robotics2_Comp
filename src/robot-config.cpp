@@ -14,6 +14,7 @@ controller Controller1 = controller(primary);
  * This should be called at the start of your int main function.
  */
 void vexcodeInit(void) {
+  // Prevents stick drift
   if ((Controller1.Axis4.position() < deadband) && (Controller1.Axis1.position() < deadband)) {
     drive(Controller1.Axis4.position(), Controller1.Axis1.position());
   }
