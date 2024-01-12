@@ -3,14 +3,6 @@ using namespace vex;
 extern brain Brain;
 extern controller Controller1;
 
-extern motor flw;
-extern motor frw;
-extern motor blw;
-extern motor brw;
-
-extern motor_group flw_brw;
-extern motor_group frw_blw;
-
 extern distance dsF;
 extern distance dsR;
 extern distance dsB;
