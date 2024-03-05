@@ -69,21 +69,21 @@ void usercontrol(void) {
 
     // Under power 1 side, over power other side to rotate
     w_backLeft.setVelocity(fwd - rot, vex::percentUnits::pct);
-    w_backLeft.setVelocity(fwd - rot, vex::percentUnits::pct);
-    w_backLeft.setVelocity(fwd + rot, vex::percentUnits::pct);
-    w_backLeft.setVelocity(fwd + rot, vex::percentUnits::pct);
+    w_frontLeft.setVelocity(fwd - rot, vex::percentUnits::pct);
+    w_backRight.setVelocity(fwd + rot, vex::percentUnits::pct);
+    w_frontRight.setVelocity(fwd + rot, vex::percentUnits::pct);
 
     // Wouldn't usually do, but need break mode to work
     if (abs(fwd) > 3 && abs(rot) > 3) {
       w_backLeft.spin(vex::directionType::fwd);
-      w_backLeft.spin(vex::directionType::fwd);
-      w_backLeft.spin(vex::directionType::fwd);
-      w_backLeft.spin(vex::directionType::fwd);
+      w_frontLeft.spin(vex::directionType::fwd);
+      w_backRight.spin(vex::directionType::fwd);
+      w_frontRight.spin(vex::directionType::fwd);
     } else {
       w_backLeft.stop();
-      w_backLeft.stop();
-      w_backLeft.stop();
-      w_backLeft.stop();
+      w_frontLeft.stop();
+      w_backRight.stop();
+      w_frontRight.stop();
     }
     
     // intake functionality
