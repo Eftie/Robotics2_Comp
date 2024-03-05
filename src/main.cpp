@@ -13,28 +13,39 @@ using namespace vex;
 // A global instance of competition
 competition Competition;
 
-// define your global instances of motors and other devices here
+// drivetrain
+motor w_backLeft = motor(PORT12, ratio18_1, false);
+motor w_frontLeft = motor(PORT15, ratio18_1, true);
+motor w_backRight = motor(PORT14, ratio18_1, true);
+motor w_frontRight = motor(PORT13, ratio18_1, false);
 
-/*---------------------------------------------------------------------------*/
-/*                          Pre-Autonomous Functions                         */
-/*                                                                           */
-/*  You may want to perform some actions before the competition starts.      */
-/*  Do them in the following function.  You must return from this function   */
-/*  or the autonomous and usercontrol tasks will not be started.  This       */
-/*  function is only called once after the V5 has been powered on and        */
-/*  not every time that the robot is disabled.                               */
-/*---------------------------------------------------------------------------*/
+// ball control
+motor shooter = motor(PORT16, ratio6_1, false);
+motor intake = motor(PORT17, ratio18_1, false);
 
-motor puncher = motor(PORT10, ratio6_1, false);
-controller Controller1 = controller(primary);
+// end game
+motor climber = motor(PORT18, ratio36_1, true);
+
+controller c = controller(primary);
 
 
 void pre_auton(void) {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
+  w_backLeft.setStopping(vex::brakeType::brake);
+  w_frontLeft.setStopping(vex::brakeType::brake);
+  w_backRight.setStopping(vex::brakeType::brake);
+  w_frontRight.setStopping(vex::brakeType::brake);
 
-  // All activities that occur before the competition starts
-  // Example: clearing encoders, setting servo positions, ...
+  shooter.setStopping(vex::brakeType::coast);
+  intake.setStopping(vex::brakeType::coast);
+
+  climber.setStopping(vex::brakeType::brake);
+
+  shooter.setVelocity(100, vex::percentUnits::pct);
+  intake.setVelocity(30, vex::percentUnits::pct);
+  climber.setVelocity(100, velocityUnits::pct);
+
 }
 
 void autonomous(void) {
@@ -44,19 +55,34 @@ void autonomous(void) {
 void usercontrol(void) {
   while (1) {
 
-    // int fwd = Controller1.Axis3.position();
-    // int rot = Controller1.Axis1.position();
+    int fwd = c.Axis3.position();
+    int rot = c.Axis1.position();
     
-    // if ((fwd < deadband) && (rot < deadband)) {
-    //   drive(Controller1.Axis3.position(), Controller1.Axis1.position());
-    // }
-
-    if (Controller1.ButtonR2.pressing()) {
-      puncher.spin(vex::directionType::fwd);
-    } else if (Controller1.ButtonL2.pressing()) {
-      puncher.spin(vex::directionType::rev);
+    // intake functionality
+    if (c.ButtonL2.pressing()) {
+      intake.spin(vex::directionType::fwd);
+    } else if (c.ButtonL1.pressing()) {
+      intake.spin(vex::directionType::rev);
     } else {
-      puncher.stop();
+      intake.stop();
+    }
+
+    // shooter functionality
+    if (c.ButtonR2.pressing()) {
+      shooter.spin(vex::directionType::fwd);
+    } else if (c.ButtonR1.pressing()) {
+      shooter.spin(vex::directionType::rev);
+    } else {
+      shooter.stop();
+    }
+    
+    // climber functionality
+    if (c.ButtonUp.pressing()) {
+      climber.spin(vex::directionType::fwd);
+    } else if (c.ButtonDown.pressing()) {
+      climber.spin(vex::directionType::rev);
+    } else {
+      climber.stop();
     }
 
     wait(20, msec); // Sleep the task for a short amount of time to
