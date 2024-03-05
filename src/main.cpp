@@ -57,33 +57,36 @@ void usercontrol(void) {
   while (1) {
 
     // VEX doesn't let me use pointers
-    int fwd = c.Axis3.position();
-    int rot = c.Axis1.position();
+    int bl_speed = c.Axis3.position() - c.Axis4.position() + c.Axis1.position();
+    int fl_speed = c.Axis3.position() + c.Axis4.position() + c.Axis1.position();
+    int br_speed = c.Axis3.position() + c.Axis4.position() - c.Axis1.position();
+    int fr_speed = c.Axis3.position() - c.Axis4.position() - c.Axis1.position();
 
     // there wasn't a prettier way to do this
     // fine control
     if (c.ButtonX.pressing()) {
-      fwd = fwd * 0.15;
-      rot = rot * 0.15;
+      bl_speed = bl_speed * 0.15;
+      fl_speed = fl_speed * 0.15;
+      br_speed = br_speed * 0.15;
+      fr_speed = fr_speed * 0.15;
     }
 
-    // Under power 1 side, over power other side to rotate
-    w_backLeft.setVelocity(fwd - rot, vex::percentUnits::pct);
-    w_backLeft.setVelocity(fwd - rot, vex::percentUnits::pct);
-    w_backLeft.setVelocity(fwd + rot, vex::percentUnits::pct);
-    w_backLeft.setVelocity(fwd + rot, vex::percentUnits::pct);
+    w_backLeft.setVelocity(bl_speed, vex::percentUnits::pct);
+    w_frontLeft.setVelocity(fl_speed, vex::percentUnits::pct);
+    w_backRight.setVelocity(br_speed, vex::percentUnits::pct);
+    w_frontRight.setVelocity(fr_speed, vex::percentUnits::pct);
 
     // Wouldn't usually do, but need break mode to work
-    if (abs(fwd) > 3 && abs(rot) > 3) {
+    if (abs(c.Axis3.position()) > 3 && abs(c.Axis1.position()) > 3 && abs(c.Axis4.position() > 3)) {
       w_backLeft.spin(vex::directionType::fwd);
-      w_backLeft.spin(vex::directionType::fwd);
-      w_backLeft.spin(vex::directionType::fwd);
-      w_backLeft.spin(vex::directionType::fwd);
+      w_frontLeft.spin(vex::directionType::fwd);
+      w_backRight.spin(vex::directionType::fwd);
+      w_frontRight.spin(vex::directionType::fwd);
     } else {
       w_backLeft.stop();
-      w_backLeft.stop();
-      w_backLeft.stop();
-      w_backLeft.stop();
+      w_frontLeft.stop();
+      w_backRight.stop();
+      w_frontRight.stop();
     }
     
     // intake functionality
