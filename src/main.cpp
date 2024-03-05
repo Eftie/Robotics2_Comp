@@ -8,7 +8,6 @@
 /*----------------------------------------------------------------------------*/
 
 #include "vex.h"
-
 using namespace vex;
 
 // A global instance of competition
@@ -26,10 +25,8 @@ competition Competition;
 /*  not every time that the robot is disabled.                               */
 /*---------------------------------------------------------------------------*/
 
-double front_prevDist = 0;
-double right_prevDist = 0;
-double back_prevDist = 0;
-double left_prevDist = 0;
+motor puncher = motor(PORT10, ratio6_1, false);
+controller Controller1 = controller(primary);
 
 
 void pre_auton(void) {
@@ -46,6 +43,21 @@ void autonomous(void) {
 
 void usercontrol(void) {
   while (1) {
+
+    // int fwd = Controller1.Axis3.position();
+    // int rot = Controller1.Axis1.position();
+    
+    // if ((fwd < deadband) && (rot < deadband)) {
+    //   drive(Controller1.Axis3.position(), Controller1.Axis1.position());
+    // }
+
+    if (Controller1.ButtonR2.pressing()) {
+      puncher.spin(vex::directionType::fwd);
+    } else if (Controller1.ButtonL2.pressing()) {
+      puncher.spin(vex::directionType::rev);
+    } else {
+      puncher.stop();
+    }
 
     wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.

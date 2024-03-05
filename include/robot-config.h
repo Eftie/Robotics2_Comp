@@ -3,11 +3,6 @@ using namespace vex;
 extern brain Brain;
 extern controller Controller1;
 
-extern distance dsF;
-extern distance dsR;
-extern distance dsB;
-extern distance dsL;
-
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
  *
