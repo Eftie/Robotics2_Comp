@@ -8,6 +8,7 @@
 /*----------------------------------------------------------------------------*/
 
 #include "vex.h"
+#include "math.h"
 using namespace vex;
 
 // A global instance of competition
@@ -55,8 +56,35 @@ void autonomous(void) {
 void usercontrol(void) {
   while (1) {
 
+    // VEX doesn't let me use pointers
     int fwd = c.Axis3.position();
     int rot = c.Axis1.position();
+
+    // there wasn't a prettier way to do this
+    // fine control
+    if (c.ButtonX.pressing()) {
+      fwd = fwd * 0.15;
+      rot = rot * 0.15;
+    }
+
+    // Under power 1 side, over power other side to rotate
+    w_backLeft.setVelocity(fwd - rot, vex::percentUnits::pct);
+    w_backLeft.setVelocity(fwd - rot, vex::percentUnits::pct);
+    w_backLeft.setVelocity(fwd + rot, vex::percentUnits::pct);
+    w_backLeft.setVelocity(fwd + rot, vex::percentUnits::pct);
+
+    // Wouldn't usually do, but need break mode to work
+    if (abs(fwd) > 3 && abs(rot) > 3) {
+      w_backLeft.spin(vex::directionType::fwd);
+      w_backLeft.spin(vex::directionType::fwd);
+      w_backLeft.spin(vex::directionType::fwd);
+      w_backLeft.spin(vex::directionType::fwd);
+    } else {
+      w_backLeft.stop();
+      w_backLeft.stop();
+      w_backLeft.stop();
+      w_backLeft.stop();
+    }
     
     // intake functionality
     if (c.ButtonL2.pressing()) {
